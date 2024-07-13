@@ -14,10 +14,29 @@ Streak keeper and XP farm for Duolingo. Never get demoted again!
 4. Get the JWT token by pasting this in the console, and copy the value ( without `'`)
 
 ```js
-document.cookie
-  .split(';')
-  .find(cookie => cookie.includes('jwt_token'))
-  .split('=')[1]
+function getCookieValue(cookieName) {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.startsWith(cookieName + '=')) {
+            return cookie.substring(cookieName.length + 1);
+        }
+    }
+    return null;
+}
+var jwtTokenValue = getCookieValue('jwt_token');
+if (jwtTokenValue) {
+    var tempTextarea = document.createElement('textarea');
+    tempTextarea.value = jwtTokenValue;
+    document.body.appendChild(tempTextarea);
+    tempTextarea.select();
+    tempTextarea.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    document.body.removeChild(tempTextarea);
+    alert("Value of jwt_token cookie: " + jwtTokenValue + "\n\nThe value has been copied to your clipboard.");
+} else {
+    alert("Run the code while being on duolingo.com.");
+}
  ```
   
   5. Go to your forked repository
